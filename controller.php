@@ -9,7 +9,6 @@
  * @version 2.0
  **/
 class HitCounter extends AbstractModuleController {
-	protected $_dependencies = array("PrototypeJs");
 	/**
 	 * Register the Hit Counter JS file
 	 *
