@@ -3,10 +3,11 @@
  * Basic hit counter.
  *
  * @package Modules
+ * @subpackage HitCounter
  * @author Peter Epp
  * @copyright Copyright (c) 2009 Peter Epp (http://teknocat.org)
  * @license GNU Lesser General Public License (http://www.gnu.org/licenses/lgpl.html)
- * @version 2.0
+ * @version 2.0 $Id: controller.php 13965 2011-08-08 16:26:17Z teknocat $
  **/
 class HitCounter extends AbstractModuleController {
 	/**
@@ -40,7 +41,7 @@ class HitCounter extends AbstractModuleController {
 			$counter_output = $counter.'&nbsp;Visit'.(($counter > 1) ? 's' : '').'&nbsp;Since&nbsp;'.$since_date;
 		}
 		$counter_output .= '
-<script type="text/javascript" charset="utf-8">';
+<script type="text/javascript">';
 		if (Session::var_exists('counted')) {
 			$counter_output .= '
 	var hit_already_counted = true;';
@@ -109,7 +110,7 @@ class HitCounter extends AbstractModuleController {
 			$this->Biscuit->ModuleSiteSearch()->set_no_index();
 		}
 	}
-	public static function install_migration() {
+	public static function install_migration($module_id) {
 		DB::query("CREATE TABLE IF NOT EXISTS `hit_counter` (
 		  `id` tinyint(3) unsigned NOT NULL default '0',
 		  `count` int(15) unsigned NOT NULL default '0',
@@ -118,12 +119,10 @@ class HitCounter extends AbstractModuleController {
 		  PRIMARY KEY  (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 		DB::query("UPDATE `modules` SET `installed` = 1 WHERE `name` = 'HitCounter'");
-		$module_id = DB::fetch_one("SELECT `id` FROM `modules` WHERE `name` = 'Contact'");
 		DB::query("INSERT INTO `module_pages` SET `module_id` = ".$module_id.", `page_name` = '*', `is_primary` = 0");
 	}
-	public static function uninstall_migration() {
+	public static function uninstall_migration($module_id) {
 		DB::query("UPDATE `modules` SET `installed` = 0 WHERE `name` = 'HitCounter'");
-		$module_id = DB::fetch_one("SELECT `id` FROM `modules` WHERE `name` = 'HitCounter'");
 		DB::query("DELETE FROM `module_pages` WHERE `module_id` = ".$module_id);
 		DB::query("DROP TABLE IF EXISTS `hit_counter`");
 	}
